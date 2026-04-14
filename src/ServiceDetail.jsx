@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import EditProjectDrawer from './EditProjectDrawer';
 
 function ServiceDetail() {
@@ -401,107 +401,46 @@ function ServiceDetail() {
         {/* 菜单 */}
         <div className="flex-1 p-4">
           <ul className="space-y-2">
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>工作台</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>用户中心</span>
-              </a>
-            </li>
             <li className="space-y-1">
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>项目中心</span>
-              </a>
+              <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                <span>工作台</span>
+              </Link>
               <ul className="pl-6 space-y-1">
                 <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md bg-blue-50 text-blue-600 whitespace-nowrap">
-                    <span>项目管理</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>已归档项目</span>
-                  </a>
+                  <Link to="/service-request" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                    <span>添加服务单</span>
+                  </Link>
                 </li>
               </ul>
             </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>订单管理</span>
-              </a>
+            <li className="space-y-1">
+              <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                <span>项目中心</span>
+              </Link>
+              <ul className="pl-6 space-y-1">
+                <li>
+                  <Link to="/" className="flex items-center gap-2 p-2 rounded-md bg-blue-50 text-blue-600 whitespace-nowrap">
+                    <span>项目管理</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                    <span>已归档项目</span>
+                  </Link>
+                </li>
+              </ul>
             </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+            <li className="space-y-1">
+              <Link to="/consultation-order" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
                 <span>工单管理</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>审批管理</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>运营管理</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>渠道客户</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>合同管理</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>产品服务</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>财务管理</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>档案管理</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>业务中心</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>视频房间</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>任务中心</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>文件中心</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>远程门诊</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                <span>消息中心</span>
-              </a>
+              </Link>
+              <ul className="pl-6 space-y-1">
+                <li>
+                  <Link to="/consultation-order" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                    <span>会诊工单</span>
+                  </Link>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -1479,107 +1418,46 @@ function ServiceDetail() {
             {/* 菜单 */}
             <div className="flex-1 p-4">
               <ul className="space-y-2">
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>工作台</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>用户中心</span>
-                  </a>
-                </li>
                 <li className="space-y-1">
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>项目中心</span>
-                  </a>
+                  <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                    <span>工作台</span>
+                  </Link>
                   <ul className="pl-6 space-y-1">
                     <li>
-                      <a href="#" className="flex items-center gap-2 p-2 rounded-md bg-blue-50 text-blue-600 whitespace-nowrap">
-                        <span>项目管理</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                        <span>已归档项目</span>
-                      </a>
+                      <Link to="/service-request" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                        <span>添加服务单</span>
+                      </Link>
                     </li>
                   </ul>
                 </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>订单管理</span>
-                  </a>
+                <li className="space-y-1">
+                  <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                    <span>项目中心</span>
+                  </Link>
+                  <ul className="pl-6 space-y-1">
+                    <li>
+                      <Link to="/" className="flex items-center gap-2 p-2 rounded-md bg-blue-50 text-blue-600 whitespace-nowrap">
+                        <span>项目管理</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                        <span>已归档项目</span>
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                <li className="space-y-1">
+                  <Link to="/consultation-order" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
                     <span>工单管理</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>审批管理</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>运营管理</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>渠道客户</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>合同管理</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>产品服务</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>财务管理</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>档案管理</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>业务中心</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>视频房间</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>任务中心</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>文件中心</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>远程门诊</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                    <span>消息中心</span>
-                  </a>
+                  </Link>
+                  <ul className="pl-6 space-y-1">
+                    <li>
+                      <Link to="/consultation-order" className="flex items-center gap-2 p-2 rounded-md text-gray-600 hover:bg-gray-100 whitespace-nowrap">
+                        <span>会诊工单</span>
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
               </ul>
             </div>
