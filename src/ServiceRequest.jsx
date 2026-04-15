@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import RequirementBadge from './components/RequirementBadge';
 
 function ServiceRequest() {
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ function ServiceRequest() {
   const [orderAmount, setOrderAmount] = useState(3000);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isBenefitModalOpen, setIsBenefitModalOpen] = useState(false);
+
+  const applicationInfoRef = useRef(null);
+  const patientMedicalRecordRef = useRef(null);
+  const paymentRef = useRef(null);
 
   // 模拟权益数据
   const benefitOptions = [
@@ -246,7 +251,30 @@ function ServiceRequest() {
 
                 {/* 步骤内容 */}
                 {currentStep === 1 && (
-                  <div>
+                  <div className="relative" ref={applicationInfoRef}>
+                    <RequirementBadge 
+                      id="2" 
+                      title="需求描述：申请信息"
+                      content={`#### 显示样式
+- 显示"申请信息"标题
+- 包含两个必填字段：申请人、申请服务
+
+#### 字段说明
+1. **申请人**（必填）
+   - 类型：下拉选择
+   - 选项：张三、李四、王五
+   - 默认值：空
+
+2. **申请服务**（必填）
+   - 类型：下拉选择
+   - 选项：专家案例教学、大病会诊、远程门诊
+   - 默认值：空
+
+#### 交互说明
+- 点击"下一步"按钮 → 进入步骤2：患者病历
+- 点击"取消"按钮 → 关闭抽屉，放弃填写`}
+                      targetRef={applicationInfoRef}
+                    />
                     <h3 className="text-lg font-medium text-gray-900 mb-4">申请信息</h3>
                     <div className="space-y-4">
                       <div>
@@ -280,7 +308,39 @@ function ServiceRequest() {
                 )}
 
                 {currentStep === 2 && (
-                  <div>
+                  <div className="relative" ref={patientMedicalRecordRef}>
+                    <RequirementBadge 
+                      id="3" 
+                      title="需求描述：患者病历"
+                      content={`#### 显示样式
+- 显示"患者病历"标题
+- 包含四个必填字段：患者姓名、年龄、性别、患者病历
+
+#### 字段说明
+1. **患者姓名**（必填）
+   - 类型：文本输入
+   - 默认值：空
+
+2. **年龄**（必填）
+   - 类型：数字输入
+   - 默认值：空
+
+3. **性别**（必填）
+   - 类型：下拉选择
+   - 选项：男、女
+   - 默认值：空
+
+4. **患者病历**（必填）
+   - 类型：多行文本
+   - 高度：32（h-32）
+   - 默认值：空
+
+#### 交互说明
+- 点击"下一步"按钮 → 进入步骤3：费用支付
+- 点击"上一步"按钮 → 返回步骤1：申请信息
+- 点击"取消"按钮 → 关闭抽屉，放弃填写`}
+                      targetRef={patientMedicalRecordRef}
+                    />
                     <h3 className="text-lg font-medium text-gray-900 mb-4">患者病历</h3>
                     <div className="space-y-4">
                       <div>
@@ -328,7 +388,34 @@ function ServiceRequest() {
                 )}
 
                 {currentStep === 3 && (
-                  <div>
+                  <div className="relative" ref={paymentRef}>
+                    <RequirementBadge 
+                      id="4"
+                      title="需求描述：费用支付"
+                      content={`#### 显示样式
+- 显示"费用支付"标题
+- 包含六个字段：订单金额、支付方式、权益、客户来源、备注、医助
+
+#### 字段说明
+**权益**（条件必填）
+- 类型：选择器/卡片
+- 条件：当支付方式为"项目权益抵扣"时必填
+- 显示"选择项目权益"按钮
+- 选择后显示权益信息卡片：项目名称、项目状态、会诊数量（剩余/总数）、会诊科室数量（剩余/总数）
+- 显示"修改项目权益"按钮
+
+#### 权益统计规则
+- 会诊数量-剩余 = 用户可发起的总服务数量 - 使用该权益发起的总量（剔除已取消状态工单）
+- 会诊科室数量-剩余 = 该科室可发起的总服务数量 - 已经发起的数量
+  - 已经发起的数量计算规则：
+    1. 分诊科室不为空时，分诊科室 = 当前拟申请科室的数量
+    2. 分诊科室为空时，拟申请会诊科室 = 当前拟申请会诊科室的数量
+
+#### 交互说明
+- 点击"选择项目权益"按钮 → 弹出"选择项目权益"弹窗
+- 点击"修改项目权益"按钮 → 重新打开选择弹窗`}
+                      targetRef={paymentRef}
+                    />
                     <h3 className="text-lg font-medium text-gray-900 mb-4">费用支付</h3>
                     <div className="space-y-4">
                       <div>

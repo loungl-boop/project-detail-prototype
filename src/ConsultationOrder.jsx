@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import RequirementBadge from './components/RequirementBadge';
 
 function ConsultationOrder() {
   const navigate = useNavigate();
   const [isEditMode, setIsEditMode] = useState(false);
+  
+  const applicationInfoRef = useRef(null);
+  const triageRef = useRef(null);
+  const triageModalRef = useRef(null);
   
   // 科室数据，包含剩余数量信息
   const departments = [
@@ -241,7 +246,20 @@ function ConsultationOrder() {
 
           {/* 工单详情 */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 relative" ref={triageRef}>
+              <RequirementBadge 
+                id="10"
+                title="需求描述：操作按钮"
+                content={`#### 按钮说明
+1. **分诊**（绿色按钮）
+   - 显示条件：查看模式
+   - 点击 → 打开分诊弹窗
+
+2. **编辑病历**（灰色边框按钮）
+   - 显示条件：查看模式
+   - 点击 → 进入编辑模式`}
+                targetRef={triageRef}
+              />
               <h3 className="text-xl font-medium text-gray-900">测试杨的病历</h3>
               <div className="flex items-center gap-2">
                 {!isEditMode ? (
@@ -258,9 +276,6 @@ function ConsultationOrder() {
                     >
                       编辑病历
                     </button>
-                    <select className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-600">
-                      <option value="">请选择</option>
-                    </select>
                   </>
                 ) : (
                   <>
@@ -373,7 +388,35 @@ function ConsultationOrder() {
             </div>
 
             {/* 申请信息 */}
-            <div className="mb-6">
+            <div className="mb-6 relative" ref={applicationInfoRef}>
+              <RequirementBadge 
+                id="8"
+                title="需求描述：申请信息"
+                content={`#### 字段说明
+
+**拟申请会诊科室**（可编辑）
+- 类型：下拉选择
+- 默认值：提交申请时填写的数据
+- 编辑状态下：
+  1. 选项包含所有状态为启用的科室
+  2. 根据项目配置，仅限制可选的科室高亮可点，其余置灰不可选
+  3. 选择科室后，显示当前项目的会诊科室数量：
+     - 总数量：为该项目配置的已选科室的总数
+     - 剩余数量：总数量 - 已选数量
+     - 已选数量：该项目下（会诊科室 + 拟申请科室）的数量
+- 查看模式下只读
+- 下拉列表仅显示科室名称，不显示剩余数量提示
+
+#### 校验规则
+- 保存时校验会诊科室剩余数量
+- 如果科室剩余数量为0，显示错误信息："会诊科室无剩余数量，不可提交"
+
+#### 交互说明
+- 查看模式下：字段只读
+- 编辑模式下：字段可编辑
+- 选择会诊科室时，清除之前的错误信息`}
+                targetRef={applicationInfoRef}
+              />
               <h4 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                 申请信息
@@ -391,7 +434,7 @@ function ConsultationOrder() {
                       >
                         {departments.map(dept => (
                           <option key={dept.value} value={dept.value}>
-                            {dept.label} {dept.remaining === 0 && '(无剩余数量)'}
+                            {dept.label}
                           </option>
                         ))}
                       </select>
@@ -489,7 +532,31 @@ function ConsultationOrder() {
       {/* 分诊弹窗 */}
       {isTriageModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-1/2">
+          <div className="bg-white rounded-lg shadow-lg w-1/2 relative">
+            <RequirementBadge 
+              id="11"
+              title="需求描述：分诊弹窗"
+              content={`#### 选择规则
+
+**会诊科室选择规则：**
+- 默认选中当前拟申请会诊科室
+- 下拉选项仅显示科室名称，不显示剩余数量提示
+- 当项目规则配置中限制了可选择的科室范围时，限制不可选的科室置灰不可选
+- 选择科室后，显示该科室的剩余会诊数量提示
+
+**会诊专家选择规则：**
+- 下拉选项显示为已选"会诊科室"下所有专家列表（状态为启用）
+- 仅显示专家名称，不显示科室
+- 选择专家后，显示该项目该专家的剩余会诊数量提示
+- 当项目规则配置中限制了可选择的专家范围时，限制不可选的专家置灰不可选
+
+#### 校验规则
+- 提交时校验会诊科室剩余数量
+- 如果科室剩余数量为0，显示错误信息："会诊科室无剩余数量，不可提交"
+- 提交时校验专家剩余数量
+- 如果专家剩余数量为0，显示错误信息："该专家无剩余数量，不可提交"`}
+              targetRef={triageModalRef}
+            />
             <div className="p-4 border-b border-gray-200 flex justify-between items-center">
               <h3 className="font-medium text-gray-900">分诊</h3>
               <button className="text-gray-400 hover:text-gray-600" onClick={handleTriageCancel}>
@@ -508,7 +575,7 @@ function ConsultationOrder() {
                   >
                     {departments.map(dept => (
                       <option key={dept.value} value={dept.value}>
-                        {dept.label} {dept.remaining === 0 && '(无剩余数量)'}
+                        {dept.label}
                       </option>
                     ))}
                   </select>
