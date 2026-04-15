@@ -1,13 +1,1993 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>-</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>尤迈会诊</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* 状态栏 */
+        .status-bar {
+            background-color: #fff;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .status-bar-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 导航栏 */
+        .nav-bar {
+            background-color: #fff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+        }
+        
+        /* 右上角图标样式 */
+        .nav-icon-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid #e0e0e0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .nav-item.active {
+            color: #009944;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        /* 首页样式 */
+        .home-page {
+            padding-bottom: 60px;
+        }
+        
+        .logo-header {
+            background-color: #009944;
+            color: #fff;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .version-tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .feature-grid {
+            background-color: #fff;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+        
+        .feature-icon:nth-child(1) {
+            background-color: #e6f7f0;
+        }
+        
+        .feature-icon:nth-child(2) {
+            background-color: #e6f0f7;
+        }
+        
+        .feature-icon:nth-child(3) {
+            background-color: #f7e6f0;
+        }
+        
+        .feature-name {
+            font-size: 14px;
+        }
+        
+        .course-banner {
+            background-color: #e6f7f0;
+            margin: 0 16px 16px;
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .course-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #009944;
+            margin-bottom: 12px;
+        }
+        
+        .course-btn {
+            background-color: #009944;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+        }
+        
+        .course-link {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #009944;
+        }
+        
+        .ai-assistant {
+            background-color: #fff;
+            margin: 0 16px 16px;
+            padding: 16px;
+            border-radius: 12px;
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e6f7f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        
+        .ai-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .ai-input-container {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .ai-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .ai-submit {
+            padding: 12px 20px;
+            background-color: #009944;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        /* 我的页面样式 */
+        .my-page {
+            padding-bottom: 60px;
+        }
+        
+        .user-info {
+            background-color: #fff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .user-role {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        
+        .user-certification {
+            font-size: 12px;
+            color: #009944;
+        }
+        
+        .major-consultation {
+            background-color: #fff;
+            padding: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .consultation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .consultation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .consultation-name {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .consultation-icon {
+            color: #009944;
+            font-size: 18px;
+        }
+        
+        .tools-services {
+            background-color: #fff;
+            padding: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .tools-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        
+        .tool-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+        
+        .tool-name {
+            font-size: 12px;
+        }
+        
+        /* 会诊列表页面样式 */
+        .consultation-list-page {
+            padding-bottom: 60px;
+        }
+        
+        .list-nav {
+            background-color: #fff;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .list-tabs {
+            background-color: #fff;
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 10px;
+        }
+        
+        .list-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+        }
+        
+        .list-tab.active {
+            color: #009944;
+            font-weight: 500;
+        }
+        
+        .list-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            width: 40%;
+            height: 2px;
+            background-color: #009944;
+        }
+        
+        .consultation-card {
+            background-color: #fff;
+            padding: 16px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .patient-info {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .status-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .apply-time {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+        
+        .consultation-purpose {
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: 1px solid #009944;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #fff;
+            color: #009944;
+        }
+        
+        .action-btn.primary {
+            background-color: #009944;
+            color: #fff;
+        }
+        
+        /* 会诊详情页面样式 */
+        .consultation-detail-page {
+            padding-bottom: 60px;
+        }
+        
+        .detail-status {
+            background-color: #009944;
+            color: #fff;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .status-icon {
+            font-size: 18px;
+        }
+        
+        .status-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .more-btn {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+        
+        .detail-tabs {
+            background-color: #fff;
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 10px;
+        }
+        
+        .detail-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+        }
+        
+        .detail-tab.active {
+            color: #009944;
+            font-weight: 500;
+        }
+        
+        .detail-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            width: 40%;
+            height: 2px;
+            background-color: #009944;
+        }
+        
+        .detail-section {
+            background-color: #fff;
+            padding: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .detail-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            width: 80px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .detail-value {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .bottom-btn {
+            position: fixed;
+            bottom: 70px;
+            left: 16px;
+            right: 16px;
+            padding: 12px;
+            background-color: #009944;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* 更多操作弹窗 */
+        .more-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: flex-end;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+        
+        .more-modal.show {
+            display: flex;
+        }
+        
+        .more-content {
+            background-color: #fff;
+            width: 100%;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+        
+        .more-item {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 16px;
+        }
+        
+        .more-item.danger {
+            color: #ff4d4f;
+        }
+        
+        .more-item.cancel {
+            margin-top: 10px;
+            border-bottom: none;
+        }
+        
+        /* 申请会诊页面样式 */
+        .apply-consultation-page {
+            padding-bottom: 60px;
+        }
+        
+        .form-container {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 16px;
+        }
+        
+        .form-item {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-label.required::before {
+            content: '*';
+            color: #ff4d4f;
+            margin-right: 4px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: none;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fafafa;
+        }
+        
+        .form-select-arrow {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .voice-to-text {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            color: #1890ff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .select-patient {
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #1890ff;
+            text-align: center;
+            background-color: #fafafa;
+        }
+        
+        /* 底部按钮 */
+        .bottom-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            padding: 16px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .expert-training {
+            padding: 8px 16px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #fafafa;
+        }
+        
+        .next-btn {
+            flex: 1;
+            margin-left: 16px;
+            padding: 12px;
+            background-color: #009944;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* 选择科室弹窗 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            width: 100%;
+            height: 80%;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            font-size: 20px;
+            color: #999;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .department-categories {
+            width: 30%;
+            background-color: #f5f5f5;
+            overflow-y: auto;
+        }
+        
+        .category-item {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+        
+        .category-item.active {
+            background-color: #fff;
+            color: #1890ff;
+            font-weight: 500;
+        }
+        
+        .department-list {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        
+        .department-item {
+            padding: 12px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .department-item.disabled {
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .department-item.highlighted {
+            color: #1890ff;
+            font-weight: 500;
+        }
+        
+        .department-quota {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* 提示框 */
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: none;
+            z-index: 2000;
+        }
+        
+        .toast.show {
+            display: block;
+        }
+        
+        /* 标签页样式 */
+        .tabs {
+            background-color: #fff;
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+        }
+        
+        .tab.active {
+            color: #009944;
+            font-weight: 500;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            width: 40%;
+            height: 2px;
+            background-color: #009944;
+        }
+        
+        /* 页面切换 */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* 标注系统样式 */
+        .prd-annotation-tag {
+            position: absolute;
+            top: -8px;
+            right: -4px;
+            display: inline-block;
+            vertical-align: top;
+            background-color: rgb(250, 173, 20);
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 14px;
+            padding: 0px 4px;
+            border-radius: 2px;
+            cursor: pointer;
+            z-index: 9998;
+        }
+
+        .prd-annotation-tooltip {
+            position: fixed;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            width: 450px;
+            max-height: 500px;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: none;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .prd-annotation-tooltip.show {
+            display: block;
+        }
+
+        .prd-annotation-tooltip .tooltip-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prd-annotation-tooltip .tooltip-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .prd-annotation-tooltip .tooltip-close {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #d9d9d9;
+            color: #666;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .prd-annotation-tooltip .tooltip-content {
+            padding: 16px;
+        }
+
+        .prd-annotation-tooltip .tooltip-content p {
+            margin-bottom: 12px;
+        }
+
+        .prd-annotation-tooltip .tooltip-content ul,
+        .prd-annotation-tooltip .tooltip-content ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .prd-annotation-tooltip .tooltip-content li {
+            margin-bottom: 4px;
+        }
+
+        .prd-annotation-tooltip .tooltip-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        .prd-annotation-tooltip .tooltip-content th,
+        .prd-annotation-tooltip .tooltip-content td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .prd-annotation-tooltip .tooltip-content th {
+            background-color: #f5f5f5;
+        }
+
+        .prd-annotation-tooltip blockquote {
+            border-left: 3px solid #ccc;
+            padding-left: 12px;
+            margin: 12px 0;
+            color: #666;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .modal-content {
+                height: 70%;
+            }
+            
+            .department-categories {
+                width: 35%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-left">13:19</div>
+        <div class="status-bar-right">
+            <span>5G</span>
+            <span>🔋</span>
+        </div>
+    </div>
+    
+    <!-- 首页 -->
+    <div class="page home-page active" id="home-page">
+        <!-- Logo头部 -->
+        <div class="logo-header">
+            <div class="logo">
+                <span>尤迈会诊</span>
+                <span class="version-tag">医生版</span>
+            </div>
+            <div class="nav-actions">
+                <span class="nav-icon-btn">•••</span>
+                <span class="nav-icon-btn">⚙️</span>
+            </div>
+        </div>
+        
+        <!-- 功能网格 -->
+        <div class="feature-grid">
+            <div class="feature-item" id="send-consultation">
+                <div class="feature-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="feature-name">发会诊</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-pills"></i>
+                </div>
+                <div class="feature-name">查药品</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="feature-name">查指南</div>
+            </div>
+        </div>
+        
+        <!-- 培训课程横幅 -->
+        <div class="course-banner">
+            <div class="course-title">重磅上线</div>
+            <div class="course-btn">开通会员，全站课程免费学</div>
+            <div class="course-link">>>>立即开通</div>
+        </div>
+        
+        <!-- AI助手 -->
+        <div class="ai-assistant">
+            <div class="ai-header">
+                <div class="ai-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <div class="user-name">小尤智答</div>
+                    <div class="user-role">24小时智能助手</div>
+                </div>
+            </div>
+            <div class="ai-text">
+                Hi，我是「小尤智答」，是24小时陪伴您的智能助手，我将帮您解决各种医学问题，向我提问吧~
+            </div>
+            <div class="ai-input-container">
+                <input type="text" class="ai-input" placeholder="问一问">
+                <button class="ai-submit">提问</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 我的页面 -->
+    <div class="page my-page" id="my-page">
+        <!-- 导航栏 -->
+        <div class="nav-bar">
+            <button class="back-btn" style="background: none; border: none; font-size: 18px;">‹</button>
+            <h1 class="nav-title">我的</h1>
+            <div class="nav-actions">
+                <span class="nav-icon-btn">•••</span>
+                <span class="nav-icon-btn">
+                    <i class="fas fa-times"></i>
+                </span>
+            </div>
+        </div>
+        
+        <!-- 用户信息 -->
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <div class="user-name">假文青儿</div>
+                <div class="user-role">医务工作者</div>
+                <div class="user-certification">实名认证 ></div>
+            </div>
+        </div>
+        
+        <!-- 大病会诊 -->
+        <div class="major-consultation" id="major-consultation">
+            <div class="consultation-item">
+                <div class="consultation-name">
+                    <span class="consultation-icon">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                    大病会诊
+                </div>
+                <span>›</span>
+            </div>
+        </div>
+        
+        <!-- 工具与服务 -->
+        <div class="tools-services">
+            <div class="tools-title">工具与服务</div>
+            <div class="tools-grid">
+                <div class="tool-item">
+                    <div class="tool-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="tool-name">津贴</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="tool-name">订单</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="tool-name">收藏</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="tool-name">客服</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="tool-name">设置</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 会诊列表页面 -->
+    <div class="page consultation-list-page" id="consultation-list-page">
+        <!-- 导航栏 -->
+        <div class="nav-bar">
+            <button class="back-btn" id="back-from-list" style="background: none; border: none; font-size: 18px;">‹</button>
+            <h1 class="nav-title">我的会诊</h1>
+            <div class="nav-actions">
+                <span class="nav-icon-btn">•••</span>
+                <span class="nav-icon-btn">⚙️</span>
+            </div>
+        </div>
+        
+        <!-- 标签页 -->
+        <div class="list-tabs">
+            <div class="list-tab active">已申请</div>
+            <div class="list-tab">待会诊</div>
+            <div class="list-tab">全部</div>
+        </div>
+        
+        <!-- 会诊卡片 -->
+        <div class="consultation-card" id="consultation-card-1">
+            <div class="card-header">
+                <div class="patient-info">测试杨 男 22</div>
+                <div class="status-tag">协助完善病历中</div>
+            </div>
+            <div class="apply-time">申请时间 2026-04-09 11:51:22</div>
+            <div class="consultation-purpose">会诊目的 1</div>
+            <div class="card-actions">
+                <button class="action-btn">继续完善</button>
+                <button class="action-btn primary view-detail" data-id="1">查看详情</button>
+            </div>
+        </div>
+        
+        <div class="consultation-card" id="consultation-card-2">
+            <div class="card-header">
+                <div class="patient-info">测试杨 男 22</div>
+                <div class="status-tag">待提交病历</div>
+            </div>
+            <div class="apply-time">申请时间 2026-04-07 09:13:21</div>
+            <div class="consultation-purpose">会诊目的 才认识</div>
+            <div class="card-actions">
+                <button class="action-btn">继续完善</button>
+                <button class="action-btn primary view-detail" data-id="2">查看详情</button>
+            </div>
+        </div>
+        
+        <div class="consultation-card" id="consultation-card-3">
+            <div class="card-header">
+                <div class="patient-info">男 22岁</div>
+                <div class="status-tag">协助完善病历中</div>
+            </div>
+            <div class="apply-time">申请时间 2026-03-02 13:56:35</div>
+            <div class="consultation-purpose">会诊目的 111</div>
+            <div class="card-actions">
+                <button class="action-btn">继续完善</button>
+                <button class="action-btn primary view-detail" data-id="3">查看详情</button>
+            </div>
+        </div>
+        
+        <div class="consultation-card" id="consultation-card-4">
+            <div class="card-header">
+                <div class="patient-info">测试 男 23天</div>
+                <div class="status-tag">协助完善病历中</div>
+            </div>
+            <div class="apply-time">申请时间 2025-09-24 14:27:55</div>
+            <div class="consultation-purpose">会诊目的 测试</div>
+            <div class="card-actions">
+                <button class="action-btn">继续完善</button>
+                <button class="action-btn primary view-detail" data-id="4">查看详情</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 会诊详情页面 -->
+    <div class="page consultation-detail-page" id="consultation-detail-page">
+        <!-- 导航栏 -->
+        <div class="nav-bar">
+            <button class="back-btn" id="back-from-detail" style="background: none; border: none; font-size: 18px;">‹</button>
+            <h1 class="nav-title">会诊单详情</h1>
+            <div class="nav-actions">
+                <span class="nav-icon-btn">•••</span>
+                <span class="nav-icon-btn">⚙️</span>
+            </div>
+        </div>
+        
+        <!-- 状态 -->
+        <div class="detail-status">
+            <span class="status-icon">
+                <i class="fas fa-clock"></i>
+            </span>
+            <span class="status-text">待审核</span>
+            <span class="more-btn" id="more-btn">•••</span>
+        </div>
+        
+        <!-- 标签页 -->
+        <div class="detail-tabs">
+            <div class="detail-tab active">患者信息</div>
+            <div class="detail-tab">病历信息</div>
+            <div class="detail-tab">会诊信息</div>
+        </div>
+        
+        <!-- 患者信息 -->
+        <div class="detail-section">
+            <div class="detail-item">
+                <div class="detail-label">患者姓名</div>
+                <div class="detail-value">测试杨</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">性别</div>
+                <div class="detail-value">男</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">年龄</div>
+                <div class="detail-value">22</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">民族</div>
+                <div class="detail-value">汉族</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">身高</div>
+                <div class="detail-value">188 cm</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">体重</div>
+                <div class="detail-value">88 kg</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">手机号</div>
+                <div class="detail-value"></div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">证件号</div>
+                <div class="detail-value">110101******4456</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">与您的关系</div>
+                <div class="detail-value">医患</div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <button class="bottom-btn">完善病历</button>
+    </div>
+    
+    <!-- 申请会诊页面 -->
+    <div class="page apply-consultation-page" id="apply-consultation-page">
+        <!-- 导航栏 -->
+        <div class="nav-bar">
+            <button class="back-btn" id="back-from-apply" style="background: none; border: none; font-size: 18px;">‹</button>
+            <h1 class="nav-title">申请会诊</h1>
+            <div class="nav-actions">
+                <span class="nav-icon-btn">•••</span>
+                <span class="nav-icon-btn">⚙️</span>
+            </div>
+        </div>
+        
+        <!-- 标签页 -->
+        <div class="tabs">
+            <div class="tab active">填写申请信息</div>
+            <div class="tab">完善患者病历</div>
+        </div>
+        
+        <!-- 表单内容 -->
+        <div class="form-container">
+            <div class="select-patient">点击选择就诊人</div>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-item">
+                <label class="form-label required">会诊目的</label>
+                <textarea class="form-input" placeholder="请填写此次会诊需要解决的问题" rows="3"></textarea>
+                <div class="voice-to-text">
+                    <i class="fas fa-microphone"></i> 语音转文字
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-item">
+                <label class="form-label required">申请科室</label>
+                <div class="form-select" id="department-select">
+                    <span>精神科</span>
+                    <span class="form-select-arrow">›</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-item">
+                <label class="form-label required">旁听人</label>
+                <div class="form-select">
+                    <span>请选择</span>
+                    <span class="form-select-arrow">›</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="bottom-section">
+            <div class="expert-training">专家案例培训 ▼</div>
+            <button class="next-btn">下一步</button>
+        </div>
+    </div>
+    
+    <!-- 修改申请信息页面 -->
+    <div class="page apply-consultation-page" id="modify-application-page">
+        <!-- 导航栏 -->
+        <div class="nav-bar">
+            <button class="back-btn" id="back-from-modify" style="background: none; border: none; font-size: 18px;">‹</button>
+            <h1 class="nav-title">完善信息</h1>
+            <div class="nav-actions">
+                <span class="nav-icon-btn">•••</span>
+                <span class="nav-icon-btn">⚙️</span>
+            </div>
+        </div>
+        
+        <!-- 表单内容 -->
+        <div class="form-container">
+            <div class="select-patient" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>测试杨</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span>医患</span>
+                    <span>男</span>
+                    <span>22</span>
+                    <span>›</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-item">
+                <label class="form-label">会诊目的</label>
+                <div class="form-input" style="border: none; padding: 0;">1</div>
+                <div class="voice-to-text" style="position: relative; margin-top: 8px; justify-content: flex-end;">
+                    <i class="fas fa-microphone"></i> 语音转文字
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-item">
+                <label class="form-label">申请科室</label>
+                <div class="form-select" id="modify-department-select">
+                    <span>精神心理科</span>
+                    <span class="form-select-arrow">›</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="bottom-section" style="flex-direction: column; align-items: stretch; gap: 16px; padding: 20px;">
+            <div class="expert-training" style="width: 100%; text-align: left;">大病会诊 ▼</div>
+            <button class="next-btn" style="margin-left: 0;">提交</button>
+        </div>
+    </div>
+    
+    <!-- 更多操作弹窗 -->
+    <div class="more-modal" id="more-modal">
+        <div class="more-content">
+            <div class="more-item" id="modify-application">修改申请信息</div>
+            <div class="more-item danger">取消会诊</div>
+            <div class="more-item">订单详情</div>
+            <div class="more-item cancel" id="cancel-more">取消</div>
+        </div>
+    </div>
+    
+    <!-- 选择科室弹窗 -->
+    <div class="modal" id="department-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">选择科室</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="department-categories">
+                    <div class="category-item">皮肤科</div>
+                    <div class="category-item">口腔科</div>
+                    <div class="category-item">眼科</div>
+                    <div class="category-item active">内科</div>
+                    <div class="category-item">外科</div>
+                    <div class="category-item">儿科</div>
+                    <div class="category-item">急诊科</div>
+                    <div class="category-item">耳鼻喉科</div>
+                    <div class="category-item">中医科</div>
+                </div>
+                <div class="department-list">
+                    <div class="department-item">普通内科</div>
+                    <div class="department-item">老年医学科</div>
+                    <div class="department-item">呼吸内科</div>
+                    <div class="department-item">消化内科</div>
+                    <div class="department-item">血液内科</div>
+                    <div class="department-item">肾内科</div>
+                    <div class="department-item">肿瘤内科</div>
+                    <div class="department-item">风湿免疫科</div>
+                    <div class="department-item">感染内科</div>
+                    <div class="department-item">心内科</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 提示框 -->
+    <div class="toast" id="toast"></div>
+    
+    <!-- 底部导航 -->
+    <div class="bottom-nav" id="bottom-nav">
+        <div class="nav-item active" id="nav-home">
+            <div class="nav-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div>首页</div>
+        </div>
+        <div class="nav-item" id="nav-my">
+            <div class="nav-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div>我的</div>
+        </div>
+    </div>
+    
+    <script>
+        // 获取元素
+        const pages = {
+            home: document.getElementById('home-page'),
+            my: document.getElementById('my-page'),
+            consultationList: document.getElementById('consultation-list-page'),
+            consultationDetail: document.getElementById('consultation-detail-page'),
+            applyConsultation: document.getElementById('apply-consultation-page'),
+            modifyApplication: document.getElementById('modify-application-page')
+        };
+        
+        const navItems = {
+            home: document.getElementById('nav-home'),
+            my: document.getElementById('nav-my')
+        };
+        
+        const buttons = {
+            sendConsultation: document.getElementById('send-consultation'),
+            majorConsultation: document.getElementById('major-consultation'),
+            backFromList: document.getElementById('back-from-list'),
+            backFromDetail: document.getElementById('back-from-detail'),
+            backFromApply: document.getElementById('back-from-apply'),
+            backFromModify: document.getElementById('back-from-modify'),
+            moreBtn: document.getElementById('more-btn'),
+            modifyApplication: document.getElementById('modify-application'),
+            cancelMore: document.getElementById('cancel-more'),
+            departmentSelect: document.getElementById('department-select'),
+            modifyDepartmentSelect: document.getElementById('modify-department-select'),
+            modalClose: document.getElementById('modal-close')
+        };
+        
+        const modals = {
+            more: document.getElementById('more-modal'),
+            department: document.getElementById('department-modal')
+        };
+        
+        const viewDetailButtons = document.querySelectorAll('.view-detail');
+        
+        // 模拟数据
+        // 科室服务限制规则：1-不限制，2-仅允许指定科室，3-限制特定科室
+        const serviceLimitRule = 2; // 仅允许指定科室
+        
+        // 已选择的科室（仅允许指定科室时有效）
+        const allowedDepartments = ['普通内科', '呼吸内科', '心内科'];
+        
+        // 科室限制数量
+        const departmentLimits = {
+            '普通内科': 2,
+            '呼吸内科': 1,
+            '心内科': 3,
+            '消化内科': 2,
+            '血液内科': 1,
+            '肾内科': 1,
+            '肿瘤内科': 2
+        };
+        
+        // 已申请科室数量（模拟数据）
+        const appliedDepartments = {
+            '普通内科': 2, // 已达到限制
+            '呼吸内科': 0,
+            '心内科': 1,
+            '消化内科': 2, // 已达到限制
+            '血液内科': 0,
+            '肾内科': 1, // 已达到限制
+            '肿瘤内科': 2 // 已达到限制
+        };
+        
+        // 页面切换函数
+        function showPage(pageName) {
+            // 隐藏所有页面
+            Object.values(pages).forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 显示指定页面
+            pages[pageName].classList.add('active');
+            
+            // 控制底部导航栏显示
+            const bottomNav = document.getElementById('bottom-nav');
+            if (pageName === 'home' || pageName === 'my') {
+                bottomNav.style.display = 'flex';
+            } else {
+                bottomNav.style.display = 'none';
+            }
+        }
+        
+        // 底部导航切换
+        navItems.home.addEventListener('click', function() {
+            navItems.home.classList.add('active');
+            navItems.my.classList.remove('active');
+            showPage('home');
+        });
+        
+        navItems.my.addEventListener('click', function() {
+            navItems.my.classList.add('active');
+            navItems.home.classList.remove('active');
+            showPage('my');
+        });
+        
+        // 首页 -> 申请会诊
+        buttons.sendConsultation.addEventListener('click', function() {
+            showPage('applyConsultation');
+        });
+        
+        // 我的 -> 会诊列表
+        buttons.majorConsultation.addEventListener('click', function() {
+            showPage('consultationList');
+        });
+        
+        // 会诊列表 -> 会诊详情
+        viewDetailButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                showPage('consultationDetail');
+            });
+        });
+        
+        // 会诊详情 -> 修改申请信息
+        buttons.moreBtn.addEventListener('click', function() {
+            modals.more.classList.add('show');
+        });
+        
+        buttons.modifyApplication.addEventListener('click', function() {
+            modals.more.classList.remove('show');
+            showPage('modifyApplication');
+        });
+        
+        buttons.cancelMore.addEventListener('click', function() {
+            modals.more.classList.remove('show');
+        });
+        
+        // 关闭更多操作弹窗
+        modals.more.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+        
+        // 返回按钮
+        buttons.backFromList.addEventListener('click', function() {
+            showPage('my');
+        });
+        
+        buttons.backFromDetail.addEventListener('click', function() {
+            showPage('consultationList');
+        });
+        
+        buttons.backFromApply.addEventListener('click', function() {
+            showPage('home');
+        });
+        
+        buttons.backFromModify.addEventListener('click', function() {
+            showPage('consultationDetail');
+        });
+        
+        // 选择科室弹窗
+        buttons.departmentSelect.addEventListener('click', function() {
+            modals.department.classList.add('show');
+        });
+        
+        buttons.modifyDepartmentSelect.addEventListener('click', function() {
+            modals.department.classList.add('show');
+        });
+        
+        buttons.modalClose.addEventListener('click', function() {
+            modals.department.classList.remove('show');
+        });
+        
+        // 关闭科室弹窗
+        modals.department.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+            }
+        });
+        
+        // 选择分类
+        const categoryItems = document.querySelectorAll('.category-item');
+        categoryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                categoryItems.forEach(cat => cat.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 初始化科室列表
+        function initDepartmentList() {
+            const departmentItems = document.querySelectorAll('.department-item');
+            departmentItems.forEach(item => {
+                // 为每个科室项添加名称容器
+                const departmentName = item.textContent;
+                item.innerHTML = `<span class="department-name">${departmentName}</span>`;
+            });
+            updateDepartmentList();
+        }
+        
+        // 更新科室列表显示
+        function updateDepartmentList() {
+            const departmentItems = document.querySelectorAll('.department-item');
+            departmentItems.forEach(item => {
+                // 重置样式
+                item.classList.remove('disabled', 'highlighted');
+                
+                // 获取科室名称
+                const departmentName = item.querySelector('.department-name').textContent;
+                
+                // 检查科室服务限制规则
+                if (serviceLimitRule === 2) { // 仅允许指定科室
+                    if (allowedDepartments.includes(departmentName)) {
+                        // 已选择科室高亮可选
+                        item.classList.add('highlighted');
+                    } else {
+                        // 未配置科室置灰不可选
+                        item.classList.add('disabled');
+                    }
+                }
+                
+                // 检查科室数量限制
+                if (departmentLimits[departmentName] && appliedDepartments[departmentName] >= departmentLimits[departmentName]) {
+                    // 已达到限制数量，置灰不可选
+                    item.classList.add('disabled');
+                    // 显示无可用数量提示
+                    const quotaElement = item.querySelector('.department-quota');
+                    if (quotaElement) {
+                        quotaElement.textContent = '(无可用数量)';
+                    } else {
+                        const quotaSpan = document.createElement('span');
+                        quotaSpan.className = 'department-quota';
+                        quotaSpan.textContent = '(无可用数量)';
+                        item.appendChild(quotaSpan);
+                    }
+                } else {
+                    // 移除无可用数量提示
+                    const quotaElement = item.querySelector('.department-quota');
+                    if (quotaElement) {
+                        quotaElement.remove();
+                    }
+                }
+            });
+        }
+        
+        // 显示提示框
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+        
+        // 选择科室
+        function setupDepartmentItemClick() {
+            const departmentItems = document.querySelectorAll('.department-item');
+            departmentItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 检查是否禁用
+                    if (this.classList.contains('disabled')) {
+                        // 检查是否是因为项目限制
+                        const departmentName = this.querySelector('.department-name').textContent;
+                        if (!allowedDepartments.includes(departmentName) && serviceLimitRule === 2) {
+                            showToast('当前项目不可申请该科室');
+                        }
+                        return;
+                    }
+                    
+                    // 获取选择的科室名称
+                    const departmentName = this.querySelector('.department-name').textContent;
+                    
+                    // 更新当前页面的科室显示
+                    const activePage = document.querySelector('.page.active');
+                    if (activePage.id === 'apply-consultation-page') {
+                        buttons.departmentSelect.querySelector('span').textContent = departmentName;
+                    } else if (activePage.id === 'modify-application-page') {
+                        buttons.modifyDepartmentSelect.querySelector('span').textContent = departmentName;
+                    }
+                    
+                    // 关闭弹窗
+                    modals.department.classList.remove('show');
+                });
+            });
+        }
+        
+        // 初始化
+        initDepartmentList();
+        setupDepartmentItemClick();
+
+        // 标注系统 JavaScript
+        const annotationData = {
+            1: {
+                title: '[1] 需求描述：选择科室弹窗',
+                content: `
+                    <p><strong>【功能概述】</strong></p>
+                    <p>本功能用于在会诊申请页面中，通过弹窗选择申请科室，并根据项目限制规则显示和限制可选科室。</p>
+                    
+                    <p><strong>【显示样式】</strong></p>
+                    <p>点击申请科室字段时，从底部弹出选择科室弹窗。</p>
+                    
+                    <p><strong>【交互与排序】</strong></p>
+                    <ul>
+                        <li>弹窗标题：选择科室</li>
+                        <li>左侧：科室分类列表</li>
+                        <li>右侧：具体科室列表</li>
+                        <li>关闭按钮：位于弹窗右上角</li>
+                    </ul>
+                    
+                    <p><strong>【业务定义】</strong></p>
+                    <blockquote>弹窗从底部弹出，采用底部抽屉式交互方式</blockquote>
+                `
+            },
+            2: {
+                title: '[2] 需求描述：科室显示与可选规则',
+                content: `
+                    <p><strong>【功能概述】</strong></p>
+                    <p>根据科室服务限制规则，控制二级科室列表的显示方式和交互逻辑。</p>
+                    
+                    <p><strong>【显示样式】</strong></p>
+                    <p>二级科室列表：展示全部标准科室（状态为启用），根据科室服务限制规则，做如下显示：</p>
+                    
+                    <table>
+                        <tr><th>限制规则</th><th>显示方式</th><th>交互逻辑</th></tr>
+                        <tr><td>不限制</td><td>所有科室可选</td><td>点击科室后更新申请科室并关闭弹窗</td></tr>
+                        <tr><td>仅允许指定科室</td><td>已选择科室高亮可选，未配置科室置灰不可选</td><td>点击未配置科室时提示"当前项目不可申请该科室"</td></tr>
+                        <tr><td>限制特定科室</td><td>所有科室可选</td><td>点击科室后更新申请科室并关闭弹窗</td></tr>
+                    </table>
+                    
+                    <p><strong>【可选科室规则】</strong></p>
+                    <ul>
+                        <li>仅允许指定科室：判断已申请科室是否等于限制数量，如果是则在科室后显示提示"<strong>（无可用数量）</strong>"，置灰不可选</li>
+                        <li>限制特定科室：判断已申请科室是否等于限制数量，如果是则在科室后显示提示"<strong>（无可用数量）</strong>"，置灰不可选</li>
+                    </ul>
+                    
+                    <p><strong>【已申请科室判断规则】</strong></p>
+                    <ol>
+                        <li>未分诊工单（会诊科室为空）：取拟申请会诊科室数量=当前科室的工单数量</li>
+                        <li>已分诊工单（会诊科室不为空）：取会诊科室=当前科室的工单数量</li>
+                    </ol>
+                    <p>已申请科室数量：取上述两种情况之和。</p>
+                `
+            },
+            3: {
+                title: '[3] 需求描述：修改申请信息-科室修改',
+                content: `
+                    <p><strong>【功能概述】</strong></p>
+                    <p>在个人中心的会诊详情页面，通过"更多操作"入口进入"修改申请信息"页面时，用户可以修改申请会诊科室。</p>
+                    
+                    <p><strong>【交互流程】</strong></p>
+                    <ol>
+                        <li>用户在会诊详情页面点击右上角"更多"按钮</li>
+                        <li>在弹出的更多操作菜单中选择"修改申请信息"</li>
+                        <li>进入修改申请信息页面后，点击"申请科室"字段</li>
+                        <li>系统弹出选择科室弹窗，显示规则与申请会诊页面一致</li>
+                        <li>用户选择科室后，系统更新修改申请信息页面的科室显示</li>
+                    </ol>
+                    
+                    <p><strong>【科室显示规则】</strong></p>
+                    <blockquote>与申请会诊页面的科室显示规则完全一致，包括：</blockquote>
+                    <ul>
+                        <li>科室服务限制规则（不限制、仅允许指定科室、限制特定科室）</li>
+                        <li>科室数量限制规则</li>
+                        <li>已申请科室判断规则</li>
+                    </ul>
+                    
+                    <p><strong>【技术实现】</strong></p>
+                    <ul>
+                        <li>复用申请会诊页面的科室选择弹窗组件</li>
+                        <li>确保在修改申请信息页面时，科室选择逻辑与申请会诊页面保持一致</li>
+                        <li>确保科室状态更新及时准确</li>
+                    </ul>
+                `
+            }
+        };
+
+        // 创建标注容器
+        function createAnnotationContainer() {
+            const container = document.createElement('div');
+            container.id = 'annotation-container';
+            container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9997;';
+            document.body.appendChild(container);
+            return container;
+        }
+
+        // 创建角标
+        function createAnnotationTag(number, targetElement) {
+            const tag = document.createElement('span');
+            tag.className = 'prd-annotation-tag';
+            tag.textContent = number;
+            tag.dataset.annotation = number;
+            
+            tag.addEventListener('mouseenter', function(e) {
+                showAnnotationTooltip(number, tag);
+                e.stopPropagation();
+            });
+            
+            tag.addEventListener('mouseleave', function(e) {
+                e.stopPropagation();
+            });
+            
+            return tag;
+        }
+
+        // 显示浮窗
+        function showAnnotationTooltip(number, tag) {
+            // 关闭已打开的相同编号浮窗
+            const existingTooltip = document.querySelector(`.prd-annotation-tooltip[data-annotation="${number}"]`);
+            if (existingTooltip) {
+                existingTooltip.remove();
+            }
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'prd-annotation-tooltip';
+            tooltip.dataset.annotation = number;
+            tooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <span class="tooltip-title">${annotationData[number].title}</span>
+                    <span class="tooltip-close">&times;</span>
+                </div>
+                <div class="tooltip-content">
+                    ${annotationData[number].content}
+                </div>
+            `;
+            
+            // 计算浮窗位置
+            const rect = tag.getBoundingClientRect();
+            let left = rect.right + 8;
+            let top = rect.top;
+            
+            // 检查是否超出右边界
+            if (left + 450 > window.innerWidth) {
+                left = rect.left - 458;
+            }
+            
+            // 检查是否超出下边界
+            if (top + 500 > window.innerHeight) {
+                top = window.innerHeight - 520;
+            }
+            
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+            
+            document.body.appendChild(tooltip);
+            tooltip.classList.add('show');
+            
+            // 关闭按钮事件
+            const closeBtn = tooltip.querySelector('.tooltip-close');
+            closeBtn.addEventListener('click', function() {
+                tooltip.remove();
+            });
+            
+            // 阻止事件冒泡
+            tooltip.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            tooltip.addEventListener('mousedown', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        // 初始化标注
+        function initAnnotations() {
+            const container = createAnnotationContainer();
+            
+            // 为申请科室字段添加标注
+            const departmentSelect = document.getElementById('department-select');
+            const modifyDepartmentSelect = document.getElementById('modify-department-select');
+            
+            if (departmentSelect) {
+                departmentSelect.style.position = 'relative';
+                departmentSelect.appendChild(createAnnotationTag(1, departmentSelect));
+            }
+            
+            if (modifyDepartmentSelect) {
+                modifyDepartmentSelect.style.position = 'relative';
+                modifyDepartmentSelect.appendChild(createAnnotationTag(3, modifyDepartmentSelect));
+            }
+            
+            // 为选择科室弹窗添加标注
+            const departmentModal = document.getElementById('department-modal');
+            if (departmentModal) {
+                const modalContent = departmentModal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.style.position = 'relative';
+                    const tag = createAnnotationTag(2, modalContent);
+                    modalContent.insertBefore(tag, modalContent.firstChild);
+                }
+            }
+        }
+
+        // 页面加载完成后初始化标注
+        document.addEventListener('DOMContentLoaded', initAnnotations);
+
+        // 点击页面其他位置关闭浮窗
+        document.addEventListener('click', function() {
+            const tooltips = document.querySelectorAll('.prd-annotation-tooltip');
+            tooltips.forEach(tooltip => tooltip.remove());
+        });
+    </script>
+</body>
 </html>
